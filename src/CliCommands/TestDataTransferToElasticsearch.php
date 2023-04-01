@@ -2,6 +2,8 @@
 
 namespace CliCommands;
 
+use Elastic\Elasticsearch\ClientBuilder;
+use Elastic\Elasticsearch\Exception\AuthenticationException;
 use Log\Writer;
 
 class TestDataTransferToElasticsearch implements CliCommandInterface
@@ -19,12 +21,13 @@ class TestDataTransferToElasticsearch implements CliCommandInterface
     /**
      * @param array $arguments
      * @return void
+     * @throws AuthenticationException
      */
     public function execute(array $arguments): void
     {
         $this->logWriter->debugMessage("execute method started.");
 
-        print_r($arguments);
+        $client = ClientBuilder::create()->build();
 
         $this->logWriter->debugMessage("execute method finished.");
     }
