@@ -10,13 +10,13 @@ use CliCommands\TestDataTransferToElasticsearch;
 use Log\Writer;
 
 // Read configuration file:
-$env = parse_ini_file('.env');
+$env = parse_ini_file('../.env');
 
 // Services:
 $logWriter = new Writer();
 
 // CLI Commands:
-$rpcCommands[TestDataTransferToElasticsearch::class] = new TestDataTransferToElasticsearch($logWriter);
+$rpcCommands[TestDataTransferToElasticsearch::class] = new TestDataTransferToElasticsearch($logWriter, $env);
 
 // Detect if script executed from command line:
 if (strtolower(php_sapi_name()) === 'cli') {
