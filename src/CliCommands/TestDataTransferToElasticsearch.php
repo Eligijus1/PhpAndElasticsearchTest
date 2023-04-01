@@ -37,7 +37,6 @@ class TestDataTransferToElasticsearch implements CliCommandInterface
     /**
      * @param array $arguments
      * @return void
-     * @throws MissingParameterException
      */
     public function execute(array $arguments): void
     {
@@ -50,6 +49,8 @@ class TestDataTransferToElasticsearch implements CliCommandInterface
         $this->searchIndexInMyIndex();
 
         $this->deleteDocumentInMyIndex();
+
+        $this->deleteMyIndex();
 
         $this->logWriter->debugMessage("'execute' method finished.");
     }
@@ -147,6 +148,37 @@ class TestDataTransferToElasticsearch implements CliCommandInterface
 //            if ($response['acknowledge'] === 1) {
 //                $this->logWriter->infoMessage("The document with id 'my_id' has been deleted.");
 //            }
+        } catch (ClientResponseException $e) {
+            if ($e->getCode() === 404) {
+                $this->logWriter->errorMessage("The document with id 'my_id' does not exist.");
+            } else {
+                $this->logWriter->errorMessage("ClientResponseException: {$e->getMessage()}");
+                exit(1);
+            }
+        } catch (ServerResponseException $e) {
+            $this->logWriter->errorMessage("ServerResponseException: {$e->getMessage()}");
+            exit(1);
+        } catch (Exception $e) {
+            $this->logWriter->errorMessage("Exception: {$e->getMessage()}");
+            exit(1);
+        }
+    }
+
+
+    /**
+     * @return void
+     */
+    private function deleteMyIndex(): void
+    {
+        try {
+            $deleteParams = [
+                'index' => 'my_index'
+            ];
+            $response = $this->elasticClient->indices()->delete($deleteParams);
+
+            if ((int)$response['acknowledged'] === 1) {
+                $this->logWriter->infoMessage("Index 'my_index' deleted.");
+            }
         } catch (ClientResponseException $e) {
             if ($e->getCode() === 404) {
                 $this->logWriter->errorMessage("The document with id 'my_id' does not exist.");
