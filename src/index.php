@@ -9,6 +9,9 @@ use CliCommands\CliCommandInterface;
 use CliCommands\TestDataTransferToElasticsearch;
 use Log\Writer;
 
+// Read configuration file:
+$env = parse_ini_file('.env');
+
 // Services:
 $logWriter = new Writer();
 

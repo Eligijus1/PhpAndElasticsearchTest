@@ -2,3 +2,4 @@
 /src/backend/Configuration/Configuration.php
 /Data/
 /vendor/
+/.env
