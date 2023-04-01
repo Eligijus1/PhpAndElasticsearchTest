@@ -34,30 +34,30 @@ class TestDataTransferToElasticsearch implements CliCommandInterface
     /**
      * @param array $arguments
      * @return void
-     * @throws AuthenticationException
      */
     public function execute(array $arguments): void
     {
-        $this->logWriter->debugMessage("execute method started.");
+        $this->logWriter->debugMessage("'execute' method started.");
 
+        $this->printInfo();
+
+        $this->logWriter->debugMessage("'execute' method finished.");
+    }
+
+    /**
+     * @return void
+     */
+    private function printInfo(): void
+    {
         try {
             $response = $this->elasticClient->info();
             $this->logWriter->debugMessage("Status code: {$response->getStatusCode()}");
         } catch (ClientResponseException $e) {
             $this->logWriter->errorMessage("ClientResponseException: {$e->getMessage()}");
+            exit(1);
         } catch (ServerResponseException $e) {
             $this->logWriter->errorMessage("ServerResponseException: {$e->getMessage()}");
+            exit(1);
         }
-
-        $this->logWriter->debugMessage("execute method finished.");
     }
 }
-/*
-2023-04-01 12:20:24 ERROR ClientResponseException:
-401 Unauthorized: {"error":{"root_cause":[{"type":"security_exception","reason":"unable to authenticate with provided credentials and anonymous access
-is not allowed for this request","additional_unsuccessful_credentials":"API key: unable to find apikey with id ZW6nPIcBf-4jny-WMBds",
-"header":{"WWW-Authenticate":["Basic realm=\"security\" charset=\"UTF-8\"","Bearer realm=\"security\"","ApiKey"]}}],
-"type":"security_exception","reason":"unable to authenticate with provided credentials and anonymous access is not
- allowed for this request","additional_unsuccessful_credentials":"API key:
-unable to find apikey with id ZW6nPIcBf-4jny-WMBds","header":{"WWW-Authenticate":["Basic realm=\"security\" charset=\"UTF-8\"","Bearer realm=\"security\"","ApiKey"]}},"status":401}
-*/
