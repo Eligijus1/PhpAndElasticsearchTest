@@ -4,7 +4,9 @@ require_once '../vendor/autoload.php';
 require_once 'Log/Writer.php';
 require_once 'CliCommands/CliCommandInterface.php';
 require_once 'CliCommands/TestDataTransferToElasticsearch.php';
+require_once 'CliCommands/AecErpOrdersIndexCreate.php';
 
+use CliCommands\AecErpOrdersIndexCreate;
 use CliCommands\CliCommandInterface;
 use CliCommands\TestDataTransferToElasticsearch;
 use Log\Writer;
@@ -17,6 +19,7 @@ $logWriter = new Writer();
 
 // CLI Commands:
 $rpcCommands[TestDataTransferToElasticsearch::class] = new TestDataTransferToElasticsearch($logWriter, $env);
+$rpcCommands[AecErpOrdersIndexCreate::class] = new AecErpOrdersIndexCreate($logWriter, $env);
 
 // Detect if script executed from command line:
 if (strtolower(php_sapi_name()) === 'cli') {
